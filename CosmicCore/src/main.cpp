@@ -1,5 +1,5 @@
 #include <iostream>
-#include "cosmic.hpp"
+#include "Cosmic.hpp"
 
 struct PrintObserver : public logic::IObserver {
     void on_state_changed(logic::GameState s) override {
