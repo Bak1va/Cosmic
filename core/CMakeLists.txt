@@ -1,16 +1,16 @@
 cmake_minimum_required(VERSION 3.16)
-project(CosmicBusiness LANGUAGES CXX)
+project(CosmicCore LANGUAGES CXX)
 
 file(GLOB_RECURSE CB_SOURCES CONFIGURE_DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
 
-add_library(CosmicBusiness STATIC ${CB_SOURCES})
+add_library(CosmicCore STATIC ${CB_SOURCES})
+add_library(Cosmic::Core ALIAS CosmicCore)
 
-target_include_directories(CosmicBusiness PUBLIC
+target_include_directories(CosmicCore PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
-target_compile_features(CosmicBusiness PUBLIC cxx_std_20)
-
+target_compile_features(CosmicCore PUBLIC cxx_std_20)
