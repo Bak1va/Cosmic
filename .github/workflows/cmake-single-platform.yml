@@ -31,6 +31,9 @@ jobs:
             libvorbis-dev \
             libgl1-mesa-dev \
             libglu1-mesa-dev \
+            libfreetype6-dev \
+            libjpeg-dev \
+            libpng-dev \
             cmake \
             g++
 
