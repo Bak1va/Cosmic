@@ -7,8 +7,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_subdirectory(CosmicBusiness)
-add_subdirectory(CosmicCore)
-add_subdirectory(CosmicTests)
+add_subdirectory(core)
+add_subdirectory(gui)
+add_subdirectory(tests)
 
 enable_testing()
