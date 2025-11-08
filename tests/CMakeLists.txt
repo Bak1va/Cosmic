@@ -20,7 +20,7 @@ add_executable(CosmicTests
 add_library(CosmicTestsLib INTERFACE)
 add_library(Cosmic::Tests ALIAS CosmicTestsLib)
 
-target_include_directories(CosmicTestsLib INTERFACE ${CMAKE_SOURCE_DIR}/CosmicBusiness/src)
+target_include_directories(CosmicTestsLib INTERFACE ${CMAKE_SOURCE_DIR}/core/src)
 
 target_link_libraries(CosmicTests PRIVATE gtest_main gmock CosmicBusiness)
 

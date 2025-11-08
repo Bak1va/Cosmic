@@ -5,10 +5,9 @@ file(GLOB_RECURSE CB_SOURCES CONFIGURE_DEPENDS
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
 
-add_library(CosmicGUI STATIC ${CB_SOURCES})
-add_library(Cosmic::GUI ALIAS CosmicGUI)
+add_executable(CosmicGUI ${CB_SOURCES})
 
-target_include_directories(CosmicGUI PRIVATE ${CMAKE_SOURCE_DIR}/CosmicBusiness/src)
+target_include_directories(CosmicGUI PRIVATE ${CMAKE_SOURCE_DIR}/core/src)
 
 target_link_libraries(CosmicGUI PRIVATE Cosmic::Core)
 
