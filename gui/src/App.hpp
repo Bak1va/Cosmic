@@ -8,8 +8,7 @@
 #include <string>
 #include <memory>
 
-namespace Cosmic
-{
+namespace Cosmic {
     class App {
     public:
         App(unsigned int width = 800u, unsigned int height = 600u, const std::string& title = "Orbyte");
