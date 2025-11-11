@@ -43,3 +43,4 @@ namespace Cosmic {
 #define CS_INFO(...)  { Cosmic::Log::getCoreLogger()->log(LogLevel::Info, __VA_ARGS__); }
 #define CS_TRACE(...) { Cosmic::Log::getCoreLogger()->log(LogLevel::Trace, __VA_ARGS__); }
 #define CS_MESSAGE(...) { Cosmic::Log::getCoreLogger()->log(LogLevel::Message, __VA_ARGS__); }
+
