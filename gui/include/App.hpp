@@ -20,8 +20,8 @@ namespace Cosmic {
         void render();
 
         sf::RenderWindow window;
-        unsigned int width;
-        unsigned int height;
+        uint32_t width;
+        uint32_t height;
         std::string title;
         sf::Clock clock;
 

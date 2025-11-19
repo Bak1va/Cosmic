@@ -5,8 +5,7 @@ file(GLOB_RECURSE CB_SOURCES CONFIGURE_DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
 
-add_library(CosmicCore STATIC ${CB_SOURCES}
-        src/event/EventHandler.cpp)
+add_library(CosmicCore STATIC ${CB_SOURCES})
 add_library(Cosmic::Core ALIAS CosmicCore)
 
 target_include_directories(CosmicCore PUBLIC
