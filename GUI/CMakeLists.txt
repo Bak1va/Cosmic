@@ -13,14 +13,14 @@ FetchContent_MakeAvailable(SFML)
 # Source files
 set(GUI_SOURCES
         Source/Main.cpp
-        Source/SfmlRenderer.cpp
+        Source/GameScreen.cpp
         Source/InputController.cpp
         Source/MenuScreen.cpp
 )
 
 # Header files
 set(GUI_HEADERS
-        Include/SfmlRenderer.hpp
+        Include/GameScreen.hpp
         Include/InputController.hpp
         Include/MenuScreen.hpp
         Include/IMenuListener.hpp

@@ -9,9 +9,9 @@
 namespace Pacman {
 
     /// @brief SFML-based renderer implementing IEventListener
-    class SfmlRenderer : public IEventListener {
+    class GameScreen : public IEventListener {
     public:
-        SfmlRenderer();
+        GameScreen();
         
         /// @brief Load rendering assets
         /// @param assetPath Path to assets directory

@@ -1,12 +1,12 @@
-#include "SfmlRenderer.hpp"
+#include "GameScreen.hpp"
 #include "GameConfig.hpp"
 #include <iostream>
 
 namespace Pacman {
 
-    SfmlRenderer::SfmlRenderer() = default;
+    GameScreen::GameScreen() = default;
 
-    bool SfmlRenderer::LoadAssets(const std::string& assetPath) {
+    bool GameScreen::LoadAssets(const std::string& assetPath) {
         bool success = true;
         
         if(!pacmanTexture_.loadFromFile(assetPath + "/Pacman16.png")) {
@@ -39,27 +39,27 @@ namespace Pacman {
         return success;
     }
 
-    void SfmlRenderer::SetGameEngine(std::shared_ptr<IGameEngine> gameEngine) {
+    void GameScreen::SetGameEngine(std::shared_ptr<IGameEngine> gameEngine) {
         gameEngine_ = std::move(gameEngine);
     }
 
-    void SfmlRenderer::OnTileUpdated(const TileUpdate& update) {
+    void GameScreen::OnTileUpdated(const TileUpdate& update) {
         updatedTiles_.push_back(update);
     }
 
-    void SfmlRenderer::OnPlayerStateChanged(const PlayerState& state) {
+    void GameScreen::OnPlayerStateChanged(const PlayerState& state) {
         playerState_ = state;
     }
 
-    void SfmlRenderer::OnGameStateChanged(GameState state) {
+    void GameScreen::OnGameStateChanged(GameState state) {
         gameState_ = state;
     }
 
-    void SfmlRenderer::OnGhostsUpdated(const std::vector<GhostState>& ghosts) {
+    void GameScreen::OnGhostsUpdated(const std::vector<GhostState>& ghosts) {
         ghostStates_ = ghosts;
     }
 
-    void SfmlRenderer::UpdateAnimations() {
+    void GameScreen::UpdateAnimations() {
         animationTimer_ += 0.016f; // ~60fps
         
         if(animationTimer_ > 0.15f) {
@@ -69,7 +69,7 @@ namespace Pacman {
         }
     }
 
-    void SfmlRenderer::RenderMap(sf::RenderWindow& window) {
+    void GameScreen::RenderMap(sf::RenderWindow& window) {
         if(!gameEngine_) return;
         
         Vector2 mapSize = gameEngine_->GetMapSize();
@@ -129,7 +129,7 @@ namespace Pacman {
         }
     }
 
-    void SfmlRenderer::RenderPlayer(sf::RenderWindow& window) {
+    void GameScreen::RenderPlayer(sf::RenderWindow& window) {
         if(!gameEngine_) return;
         
         // Select animation frame row based on direction
@@ -157,7 +157,7 @@ namespace Pacman {
         window.draw(pacmanSprite_);
     }
 
-    void SfmlRenderer::RenderGhosts(sf::RenderWindow& window) {
+    void GameScreen::RenderGhosts(sf::RenderWindow& window) {
         ghostSprites_.clear();
         
         for(const auto& ghost : ghostStates_) {
@@ -197,7 +197,7 @@ namespace Pacman {
         }
     }
 
-    void SfmlRenderer::RenderHud(sf::RenderWindow& window) {
+    void GameScreen::RenderHud(sf::RenderWindow& window) {
         // Skip if font didn't load
         if(!hudFont_.getInfo().family.empty()) {
             sf::Text scoreText;
@@ -271,7 +271,7 @@ namespace Pacman {
         }
     }
 
-    void SfmlRenderer::Render(sf::RenderWindow& window) {
+    void GameScreen::Render(sf::RenderWindow& window) {
         UpdateAnimations();
         
         window.clear(sf::Color::Black);

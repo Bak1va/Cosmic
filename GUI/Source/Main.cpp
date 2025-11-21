@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "IGameEngine.hpp"
 #include "GameConfig.hpp"
-#include "SfmlRenderer.hpp"
+#include "GameScreen.hpp"
 #include "InputController.hpp"
 #include "MenuScreen.hpp"
 #include "IMenuListener.hpp"
@@ -92,7 +92,7 @@ int main() {
     gameWindow.setFramerateLimit(60);
     
     // Setup renderer
-    auto renderer = std::make_shared<SfmlRenderer>();
+    auto renderer = std::make_shared<GameScreen>();
     renderer->SetGameEngine(gameEngine);
     gameEngine->AddListener(renderer);
     
