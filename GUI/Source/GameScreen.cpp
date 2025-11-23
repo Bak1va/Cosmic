@@ -15,8 +15,12 @@ namespace Pacman {
         }
         
         if(!ghostTexture_.loadFromFile(assetPath + "/Ghost16.png")) {
-            std::cerr << "Failed to load Ghost texture\n";
+            std::cerr << "Failed to load Ghost texture from: " << assetPath << "/Ghost16.png\n";
+            std::cerr << "Using fallback colored ghost rendering\n";
             success = false;
+        } else {
+            std::cout << "Ghost texture loaded successfully: "
+                      << ghostTexture_.getSize().x << "x" << ghostTexture_.getSize().y << " pixels\n";
         }
         
         // Optional textures
@@ -160,40 +164,136 @@ namespace Pacman {
     void GameScreen::RenderGhosts(sf::RenderWindow& window) {
         ghostSprites_.clear();
         
+        // TEMPORARY: Force fallback colored rendering to ensure all ghosts are visible
+        // We'll use colored circles with proper colors for each ghost type
+        bool useTexture = false; // Disabled until sprite sheet layout is corrected
+
         for(const auto& ghost : ghostStates_) {
-            sf::Sprite ghostSprite(ghostTexture_);
-            
-            // Select frame based on direction
-            int row = 0;
-            switch(ghost.CurrentDirection) {
-                case Direction::Right: row = 0; break;
-                case Direction::Left:  row = 1; break;
-                case Direction::Up:    row = 2; break;
-                case Direction::Down:  row = 3; break;
-                default: row = 0; break;
+            if(useTexture) {
+                // Sprite rendering (disabled for now)
+                sf::Sprite ghostSprite(ghostTexture_);
+                int row = 0;
+                int col = 0;
+
+                if(ghost.IsEaten) {
+                    row = 2;
+                    switch(ghost.CurrentDirection) {
+                        case Direction::Right: col = 2; break;
+                        case Direction::Left:  col = 3; break;
+                        case Direction::Up:    col = 4; break;
+                        case Direction::Down:  col = 5; break;
+                        default: col = 2; break;
+                    }
+                } else if(ghost.IsFrightened) {
+                    row = 2;
+                    col = ghostFrame_;
+                } else {
+                    switch(ghost.Type) {
+                        case GhostType::Red:
+                            row = 0;
+                            col = 0 + ghostFrame_;
+                            break;
+                        case GhostType::Pink:
+                            row = 0;
+                            col = 2 + ghostFrame_;
+                            break;
+                        case GhostType::Blue:
+                            row = 1;
+                            col = 0 + ghostFrame_;
+                            break;
+                        case GhostType::Orange:
+                            row = 1;
+                            col = 2 + ghostFrame_;
+                            break;
+                        default:
+                            row = 0;
+                            col = 0;
+                            break;
+                    }
+                }
+
+                ghostSprite.setTextureRect({
+                    col * TILE_SIZE,
+                    row * TILE_SIZE,
+                    TILE_SIZE,
+                    TILE_SIZE
+                });
+                ghostSprite.setPosition(
+                    static_cast<float>(ghost.Position.X * TILE_SIZE),
+                    static_cast<float>(ghost.Position.Y * TILE_SIZE)
+                );
+
+                window.draw(ghostSprite);
+            } else {
+                // Fallback: Use colored shapes to create better-looking ghosts
+                float posX = static_cast<float>(ghost.Position.X * TILE_SIZE);
+                float posY = static_cast<float>(ghost.Position.Y * TILE_SIZE);
+
+                if(ghost.IsEaten) {
+                    // Draw only eyes when eaten
+                    sf::CircleShape eyeWhite(3.5f);
+                    eyeWhite.setFillColor(sf::Color::White);
+
+                    sf::CircleShape pupil(1.5f);
+                    pupil.setFillColor(sf::Color::Blue);
+
+                    // Left eye
+                    eyeWhite.setPosition(posX + 3, posY + 5);
+                    window.draw(eyeWhite);
+                    pupil.setPosition(posX + 5, posY + 6);
+                    window.draw(pupil);
+
+                    // Right eye
+                    eyeWhite.setPosition(posX + 10, posY + 5);
+                    window.draw(eyeWhite);
+                    pupil.setPosition(posX + 12, posY + 6);
+                    window.draw(pupil);
+                } else {
+                    // Draw ghost body
+                    sf::Color ghostColor;
+                    if(ghost.IsFrightened) {
+                        ghostColor = sf::Color(0, 0, 200); // Dark blue when frightened
+                    } else {
+                        switch(ghost.Type) {
+                            case GhostType::Red:    ghostColor = sf::Color(255, 0, 0); break;     // Red
+                            case GhostType::Pink:   ghostColor = sf::Color(255, 184, 222); break; // Pink
+                            case GhostType::Blue:   ghostColor = sf::Color(0, 255, 255); break;   // Cyan
+                            case GhostType::Orange: ghostColor = sf::Color(255, 165, 0); break;   // Orange
+                            default: ghostColor = sf::Color::Red; break;
+                        }
+                    }
+
+                    // Draw body as rounded rectangle (circle for top, rectangle for body)
+                    sf::CircleShape head(8.0f);
+                    head.setFillColor(ghostColor);
+                    head.setPosition(posX, posY);
+                    window.draw(head);
+
+                    sf::RectangleShape body(sf::Vector2f(16.0f, 10.0f));
+                    body.setFillColor(ghostColor);
+                    body.setPosition(posX, posY + 6);
+                    window.draw(body);
+
+                    // Draw eyes
+                    sf::CircleShape eyeWhite(3.0f);
+                    eyeWhite.setFillColor(sf::Color::White);
+
+                    sf::CircleShape pupil(1.5f);
+                    pupil.setFillColor(sf::Color::Black);
+
+                    // Left eye
+                    eyeWhite.setPosition(posX + 3, posY + 4);
+                    window.draw(eyeWhite);
+                    pupil.setPosition(posX + 4.5f, posY + 5.5f);
+                    window.draw(pupil);
+
+                    // Right eye
+                    eyeWhite.setPosition(posX + 10, posY + 4);
+                    window.draw(eyeWhite);
+                    pupil.setPosition(posX + 11.5f, posY + 5.5f);
+                    window.draw(pupil);
+                }
             }
-            
-            // Use different row for frightened state
-            if(ghost.IsFrightened) {
-                row = 4;
-            }
-            
-            ghostSprite.setTextureRect({
-                ghostFrame_ * TILE_SIZE, 
-                row * TILE_SIZE, 
-                TILE_SIZE, 
-                TILE_SIZE
-            });
-            ghostSprite.setPosition(
-                static_cast<float>(ghost.Position.X * TILE_SIZE),
-                static_cast<float>(ghost.Position.Y * TILE_SIZE)
-            );
-            
-            ghostSprites_.push_back(ghostSprite);
-        }
-        
-        for(const auto& sprite : ghostSprites_) {
-            window.draw(sprite);
         }
     }
 

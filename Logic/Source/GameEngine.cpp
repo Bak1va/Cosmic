@@ -28,7 +28,7 @@ namespace Pacman {
         void StartNewGame() override {
             std::lock_guard<std::mutex> lock(mutex_);
             map_.Initialize();
-            InitializePlayer();
+            ResetPlayerForNewGame();
             InitializeGhosts();
             modeController_.Reset();
             playerStepTimer_ = 0.0f;
@@ -125,7 +125,7 @@ namespace Pacman {
     private:
         void InitializeGame() {
             map_.Initialize();
-            InitializePlayer();
+            ResetPlayerForNewGame();
             InitializeGhosts();
             modeController_.Reset();
             gameState_ = GameState::Paused;
@@ -134,10 +134,14 @@ namespace Pacman {
         void InitializePlayer() {
             playerState_.Position = {GameConfig::PlayerStartX, GameConfig::PlayerStartY};
             playerState_.CurrentDirection = Direction::Left;
-            playerState_.Score = 0;
             playerState_.IsPoweredUp = false;
-            playerState_.Lives = GameConfig::StartingLives;
             desiredDirection_ = Direction::Left;
+        }
+
+        void ResetPlayerForNewGame() {
+            InitializePlayer();
+            playerState_.Score = 0;
+            playerState_.Lives = GameConfig::StartingLives;
         }
 
         void InitializeGhosts() {
@@ -392,6 +396,7 @@ namespace Pacman {
 
         void HandlePlayerDeath() {
             playerState_.Lives--;
+            NotifyPlayerState();
 
             if (playerState_.Lives <= 0) {
                 gameState_ = GameState::GameOver;
@@ -402,7 +407,6 @@ namespace Pacman {
                 modeController_.Reset();
                 playerStepTimer_ = 0.0f;
                 ghostStepTimer_ = 0.0f;
-                NotifyPlayerState();
                 NotifyGhostsUpdated();
             }
         }

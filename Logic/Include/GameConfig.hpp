@@ -52,7 +52,7 @@ namespace Pacman {
 
         // Player start
         static constexpr int PlayerStartX = 13;
-        static constexpr int PlayerStartY = 23;
+        static constexpr int PlayerStartY = 26;
 
         // Gameplay
         static constexpr int StartingLives = 3;
