@@ -10,7 +10,7 @@ namespace Pacman {
         // Scoring
         static constexpr int PelletScore = 10;
         static constexpr int PowerPelletScore = 50;
-        static constexpr int GhostScore = 200;
+        static constexpr int GhostScore = 50;
         static constexpr int GhostScoreMultiplier = 2;
 
         // Movement timing (seconds)

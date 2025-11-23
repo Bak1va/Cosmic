@@ -377,11 +377,8 @@ namespace Pacman {
                         ghost.IsEaten = true;
                         ghost.IsFrightened = false;
 
-                        int ghostScore = GameConfig::GhostScore;
-                        for (int i = 0; i < ghostsEatenThisPowerUp_; ++i) {
-                            ghostScore *= GameConfig::GhostScoreMultiplier;
-                        }
-                        playerState_.Score += ghostScore;
+                        // Award 50 points per eaten ghost
+                        playerState_.Score += GameConfig::GhostScore;
                         ghostsEatenThisPowerUp_++;
 
                         NotifyPlayerState();
