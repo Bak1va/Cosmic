@@ -1,6 +1,7 @@
 #include "GameScreen.hpp"
 #include "GameConfig.hpp"
 #include <iostream>
+#include <functional>
 
 namespace Pacman {
 
@@ -61,6 +62,22 @@ namespace Pacman {
 
     void GameScreen::OnGhostsUpdated(const std::vector<GhostState>& ghosts) {
         ghostStates_ = ghosts;
+    }
+
+    void GameScreen::SetPlayCallback(std::function<void()> cb) {
+        playCallback_ = std::move(cb);
+    }
+
+    void GameScreen::HandleEvent(const sf::Event& event, sf::RenderWindow& window) {
+        if (gameState_ != GameState::GameOver && gameState_ != GameState::Victory) return;
+
+        if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+            sf::Vector2i pixelPos(event.mouseButton.x, event.mouseButton.y);
+            sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
+            if (playAgainButtonRect_.contains(worldPos)) {
+                if (playCallback_) playCallback_();
+            }
+        }
     }
 
     void GameScreen::UpdateAnimations() {
@@ -333,14 +350,37 @@ namespace Pacman {
                 gameOverText.setCharacterSize(48);
                 gameOverText.setFillColor(sf::Color::Red);
                 gameOverText.setString("GAME OVER");
-                
+
                 sf::FloatRect bounds = gameOverText.getLocalBounds();
                 gameOverText.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
-                gameOverText.setPosition(
-                    static_cast<float>(window.getSize().x) / 2.0f,
-                    static_cast<float>(window.getSize().y) / 2.0f
-                );
+                float centerX = static_cast<float>(window.getSize().x) / 2.0f;
+                float centerY = static_cast<float>(window.getSize().y) / 2.0f;
+                gameOverText.setPosition(centerX, centerY - 40.0f); // move up to leave space for button
                 window.draw(gameOverText);
+
+                const float btnW = 200.0f;
+                const float btnH = 48.0f;
+                sf::Vector2f btnPos(centerX - btnW / 2.0f, centerY + 10.0f);
+
+                sf::RectangleShape btnShape(sf::Vector2f(btnW, btnH));
+                btnShape.setFillColor(sf::Color(60, 60, 60));
+                btnShape.setOutlineColor(sf::Color::White);
+                btnShape.setOutlineThickness(2.0f);
+                btnShape.setPosition(btnPos);
+                window.draw(btnShape);
+
+                sf::Text playText;
+                playText.setFont(hudFont_);
+                playText.setCharacterSize(24);
+                playText.setFillColor(sf::Color::White);
+                playText.setString("Play Again");
+                sf::FloatRect ptBounds = playText.getLocalBounds();
+                playText.setOrigin(ptBounds.width / 2.0f, ptBounds.height / 2.0f);
+                playText.setPosition(btnPos.x + btnW / 2.0f, btnPos.y + btnH / 2.0f - 4.0f);
+                window.draw(playText);
+
+                playAgainButtonRect_ = sf::FloatRect(btnPos.x, btnPos.y, btnW, btnH);
+
             }
             else if(gameState_ == GameState::Victory) {
                 sf::Text victoryText;
@@ -356,6 +396,31 @@ namespace Pacman {
                     static_cast<float>(window.getSize().y) / 2.0f
                 );
                 window.draw(victoryText);
+
+                const float btnW = 200.0f;
+                const float btnH = 48.0f;
+                float centerX = static_cast<float>(window.getSize().x) / 2.0f;
+                float centerY = static_cast<float>(window.getSize().y) / 2.0f;
+                sf::Vector2f btnPos(centerX - btnW / 2.0f, centerY + 10.0f);
+
+                sf::RectangleShape btnShape(sf::Vector2f(btnW, btnH));
+                btnShape.setFillColor(sf::Color(60, 60, 60));
+                btnShape.setOutlineColor(sf::Color::White);
+                btnShape.setOutlineThickness(2.0f);
+                btnShape.setPosition(btnPos);
+                window.draw(btnShape);
+
+                sf::Text playText;
+                playText.setFont(hudFont_);
+                playText.setCharacterSize(24);
+                playText.setFillColor(sf::Color::White);
+                playText.setString("Play Again");
+                sf::FloatRect ptBounds = playText.getLocalBounds();
+                playText.setOrigin(ptBounds.width / 2.0f, ptBounds.height / 2.0f);
+                playText.setPosition(btnPos.x + btnW / 2.0f, btnPos.y + btnH / 2.0f - 4.0f);
+                window.draw(playText);
+
+                playAgainButtonRect_ = sf::FloatRect(btnPos.x, btnPos.y, btnW, btnH);
             }
             
             // Power-up indicator

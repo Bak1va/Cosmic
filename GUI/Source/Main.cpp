@@ -74,16 +74,20 @@ int main() {
     auto renderer = std::make_shared<GameScreen>();
     renderer->SetGameEngine(gameEngine);
     gameEngine->AddListener(renderer);
-    
+
+    renderer->SetPlayCallback([gameEngine]() {
+        if (gameEngine) gameEngine->StartNewGame();
+    });
+
     // Setup input controller
     InputController inputController(gameEngine);
-    
-    // Load game assets
+
+
     if(!renderer->LoadAssets("assets")) {
         std::cerr << "Error: Failed to load game assets\n";
         return 1;
     }
-    
+
     // Start the game
     gameEngine->StartNewGame();
     
@@ -103,6 +107,7 @@ int main() {
             }
             
             inputController.ProcessEvent(event);
+            renderer->HandleEvent(event, gameWindow);
         }
         
         float deltaTime = clock.restart().asSeconds();

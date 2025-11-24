@@ -5,6 +5,7 @@
 #include "IGameEngine.hpp"
 #include <vector>
 #include <memory>
+#include <functional>
 
 namespace Pacman {
 
@@ -31,6 +32,12 @@ namespace Pacman {
         /// @brief Render the game
         /// @param window The window to render to
         void Render(sf::RenderWindow& window);
+
+        /// @brief Set a callback invoked when the Play/Play Again button is pressed
+        void SetPlayCallback(std::function<void()> cb);
+
+        /// @brief Handle an SFML event (mouse clicks for Play Again button)
+        void HandleEvent(const sf::Event& event, sf::RenderWindow& window);
 
     private:
         void UpdateAnimations();
@@ -64,6 +71,9 @@ namespace Pacman {
         int ghostFrame_ = 0;
 
         static constexpr int TILE_SIZE = 16;
+
+        std::function<void()> playCallback_;
+        sf::FloatRect playAgainButtonRect_;
     };
 
 }
