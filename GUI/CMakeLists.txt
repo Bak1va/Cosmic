@@ -10,13 +10,17 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SFML)
 
-# Source files
-set(GUI_SOURCES
-        Source/Main.cpp
+# Common GUI sources (library)
+set(GUI_COMMON_SOURCES
         Source/GameScreen.cpp
         Source/InputController.cpp
         Source/MenuScreen.cpp
         Source/Application.cpp
+)
+
+# Sources that belong only to the executable
+set(GUI_EXEC_SOURCES
+        Source/Main.cpp
 )
 
 # Header files
@@ -28,25 +32,44 @@ set(GUI_HEADERS
         Include/Application.hpp
 )
 
-# Create executable
-add_executable(PacmanGame ${GUI_SOURCES} ${GUI_HEADERS})
+# Create static library for GUI implementation
+add_library(PacmanGUI STATIC ${GUI_COMMON_SOURCES} ${GUI_HEADERS})
+
+# Expose include directories
+target_include_directories(PacmanGUI PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/Include
+)
+
+# Link libraries that GUI depends on
+target_link_libraries(PacmanGUI PUBLIC
+        Pacman::Logic
+        sfml-graphics
+        sfml-window
+        sfml-system
+)
+
+# Compile features
+target_compile_features(PacmanGUI PUBLIC cxx_std_20)
+
+# Create alias for cleaner linking
+add_library(Pacman::GUI ALIAS PacmanGUI)
+
+# Create executable that links the GUI library
+add_executable(PacmanGame ${GUI_EXEC_SOURCES})
 
 # Set output directory
 set_target_properties(PacmanGame PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Bin
 )
 
-# Include directories
+# Include directories for executable
 target_include_directories(PacmanGame PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/Include
 )
 
-# Link libraries
+# Link the GUI library (contains the implementation) and other required libs
 target_link_libraries(PacmanGame PRIVATE
-        Pacman::Logic
-        sfml-graphics
-        sfml-window
-        sfml-system
+        PacmanGUI
 )
 
 # Compile features
@@ -65,10 +88,16 @@ if(WIN32)
 endif()
 
 # Copy assets
-add_custom_command(TARGET PacmanGame POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory
-        $<TARGET_FILE_DIR:PacmanGame>/Assets
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/Assets
-        $<TARGET_FILE_DIR:PacmanGame>/Assets
-)
+if(EXISTS "${CMAKE_SOURCE_DIR}/assets")
+    add_custom_command(TARGET PacmanGame POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory
+            $<TARGET_FILE_DIR:PacmanGame>/Assets
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_SOURCE_DIR}/assets"
+            $<TARGET_FILE_DIR:PacmanGame>/Assets
+    )
+else()
+    add_custom_command(TARGET PacmanGame POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E echo "[NOTICE] Assets directory not found: ${CMAKE_SOURCE_DIR}/assets - skipping copy"
+    )
+endif()

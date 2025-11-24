@@ -38,3 +38,6 @@ endif()
 
 # Create alias for cleaner linking
 add_library(Pacman::Logic ALIAS PacmanLogic)
+
+# Provide legacy/expected alias so other subprojects can link to Cosmic::Core
+add_library(Cosmic::Core ALIAS PacmanLogic)

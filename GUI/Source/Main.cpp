@@ -28,7 +28,7 @@ int main() {
     auto application = std::make_shared<Application>();
     MenuScreen menu(application);
     
-    if(!menu.LoadAssets("Assets")) {
+    if(!menu.LoadAssets("assets")) {
         std::cerr << "Warning: Failed to load menu assets\n";
     }
     
@@ -79,7 +79,7 @@ int main() {
     InputController inputController(gameEngine);
     
     // Load game assets
-    if(!renderer->LoadAssets("Assets")) {
+    if(!renderer->LoadAssets("assets")) {
         std::cerr << "Error: Failed to load game assets\n";
         return 1;
     }

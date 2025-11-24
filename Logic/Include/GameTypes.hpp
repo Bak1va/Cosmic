@@ -7,7 +7,6 @@
 
 namespace Pacman {
 
-    // Enumerations
     enum class Direction {
         Up,
         Down,
@@ -40,13 +39,12 @@ namespace Pacman {
     };
 
     enum class GhostMode {
-        Chase,
         Scatter,
+        Chase,
         Frightened,
         Eaten
     };
 
-    // Structures
     struct Vector2 {
         int X = 0;
         int Y = 0;
@@ -80,6 +78,12 @@ namespace Pacman {
         float Distance(const Vector2& other) const {
             return std::sqrt(static_cast<float>(DistanceSquared(other)));
         }
+
+        bool operator<(const Vector2& other) const {
+            if (X < other.X) return true;
+            if (X > other.X) return false;
+            return Y < other.Y;
+        }
     };
 
     struct TileUpdate {
@@ -106,8 +110,6 @@ namespace Pacman {
         Vector2 TargetTile{0, 0};
         Vector2 ScatterTarget{0, 0};
     };
-
-    // ==================== Helper Functions ====================
 
     inline Vector2 GetDirectionDelta(Direction dir) {
         switch (dir) {

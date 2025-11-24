@@ -7,12 +7,15 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Build options
 option(BUILD_GUI "Build GUI application" ON)
+option(BUILD_TESTS "Build Tests" ON)
 
-# Add subdirectories
 add_subdirectory(Logic)
 
 if(BUILD_GUI)
     add_subdirectory(GUI)
+endif()
+
+if(BUILD_TESTS)
+    add_subdirectory(Tests)
 endif()

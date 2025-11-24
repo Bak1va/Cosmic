@@ -42,7 +42,7 @@ namespace Pacman {
                     gameEngine_->SetPlayerDirection(Direction::Right);
                     break;
                 
-                // Pause controls
+                // pause
                 case sf::Keyboard::P:
                 case sf::Keyboard::Space:
                     gameEngine_->SetPaused(gameEngine_->GetState() != GameState::Paused);

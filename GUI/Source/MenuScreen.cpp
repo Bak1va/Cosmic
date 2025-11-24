@@ -7,7 +7,6 @@ namespace Pacman {
 
     namespace {
         bool TryLoadFont(sf::Font& font) {
-            // Try common system fonts
             const char* candidates[] = {
                 "C:/Windows/Fonts/arial.ttf",
                 "C:/Windows/Fonts/segoeui.ttf",
@@ -15,7 +14,7 @@ namespace Pacman {
                 "C:/Windows/Fonts/verdana.ttf",
                 "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
                 "/System/Library/Fonts/Helvetica.ttc",
-                "Assets/arial.ttf"
+                "assets/arial.ttf"
             };
             
             for(const char* path : candidates) {
@@ -35,20 +34,17 @@ namespace Pacman {
         if(!TryLoadFont(font_)) {
             return false;
         }
-        
-        // Title text
+
         titleText_.setFont(font_);
         titleText_.setString("PAC-MAN");
         titleText_.setCharacterSize(64);
         titleText_.setFillColor(sf::Color::Yellow);
-        
-        // Play button
+
         playText_.setFont(font_);
         playText_.setString("PLAY");
         playText_.setCharacterSize(42);
         playText_.setFillColor(sf::Color::White);
-        
-        // Quit button
+
         quitText_.setFont(font_);
         quitText_.setString("QUIT");
         quitText_.setCharacterSize(42);
@@ -162,7 +158,7 @@ namespace Pacman {
         playText_.setFillColor(selectedIndex_ == 0 ? sf::Color::Cyan : sf::Color::White);
         quitText_.setFillColor(selectedIndex_ == 1 ? sf::Color::Cyan : sf::Color::White);
 
-        // Draw button backgrounds
+        // button backgrounds
         auto drawBackground = [&](const sf::FloatRect& rect, bool isSelected) {
             sf::RectangleShape background;
             background.setPosition({rect.left - 20.0f, rect.top - 12.0f});
@@ -176,7 +172,6 @@ namespace Pacman {
         drawBackground(playRect_, selectedIndex_ == 0);
         drawBackground(quitRect_, selectedIndex_ == 1);
 
-        // Draw text
         window.draw(titleText_);
         window.draw(playText_);
         window.draw(quitText_);
