@@ -10,25 +10,26 @@
 namespace Pacman {
 
     /// @brief SFML-based renderer implementing IEventListener
+    /// Supports sprite-based map rendering with automatic wall tile selection
     class GameScreen : public IEventListener {
     public:
         GameScreen();
-        
+
         /// @brief Load rendering assets
         /// @param assetPath Path to assets directory
         /// @return True if all assets loaded successfully
         bool LoadAssets(const std::string& assetPath);
-        
+
         /// @brief Set the game engine reference
         /// @param gameEngine Game engine to render
         void SetGameEngine(std::shared_ptr<IGameEngine> gameEngine);
-        
+
         // IEventListener implementation
         void OnTileUpdated(const TileUpdate& update) override;
         void OnPlayerStateChanged(const PlayerState& state) override;
         void OnGameStateChanged(GameState state) override;
         void OnGhostsUpdated(const std::vector<GhostState>& ghosts) override;
-        
+
         /// @brief Render the game
         /// @param window The window to render to
         void Render(sf::RenderWindow& window);
@@ -46,8 +47,14 @@ namespace Pacman {
         void RenderGhosts(sf::RenderWindow& window);
         void RenderHud(sf::RenderWindow& window);
 
+        /// @brief Calculate wall sprite index based on adjacent tiles (0-15)
+        /// @param x X coordinate in tile space
+        /// @param y Y coordinate in tile space
+        /// @return Sprite index using formula: down + 2*(left + 2*(right + 2*up))
+        int CalculateWallSpriteIndex(int x, int y) const;
+
         std::shared_ptr<IGameEngine> gameEngine_;
-        
+
         // Cached state
         std::vector<TileUpdate> updatedTiles_;
         PlayerState playerState_{};
@@ -69,6 +76,9 @@ namespace Pacman {
         float animationTimer_ = 0.0f;
         int pacmanFrame_ = 0;
         int ghostFrame_ = 0;
+
+        // Asset availability flags
+        bool hasMapTexture_ = false;
 
         static constexpr int TILE_SIZE = 16;
 

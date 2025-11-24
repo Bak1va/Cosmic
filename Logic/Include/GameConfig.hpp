@@ -61,8 +61,9 @@ namespace Pacman {
 
         // Animation
         static constexpr int TileSize = 16;
-        static constexpr int PacmanFrameCount = 4;
+        static constexpr int PacmanFrameCount = 6;
         static constexpr int GhostFrameCount = 2;
+        static constexpr float PacmanAnimationSpeed = 0.08f;
     };
 
 }
