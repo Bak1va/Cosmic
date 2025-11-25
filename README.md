@@ -27,10 +27,9 @@ Each method includes the essential commands; platform-specific dependency instal
 
 Use this method for command-line development and for continuous integration pipelines (GitHub Actions, GitLab CI, etc.). The CMake commands are cross-platform; dependency installation is platform-specific.
 
-Note on dependencies: if you run CI on `ubuntu-latest` or develop on Debian/Ubuntu, install the packages below. For other distros or platforms, install equivalent packages or provide prebuilt binaries (e.g., SFML) via your package manager or a dependency manager.
-
-Install dependencies (example for Debian/Ubuntu CI runner or developer machine):
-
+> **Note:** If you run CI on `ubuntu-latest` or develop on Debian/Ubuntu, install the packages below. For other distros or platforms, install equivalent packages or provide prebuilt binaries (e.g., `SFML`) via your package manager or a dependency manager.
+>
+> Install dependencies (example for Debian/Ubuntu CI runner or developer machine):
 ```bash
 sudo add-apt-repository universe
 sudo apt-get update
@@ -83,11 +82,6 @@ ctest -C Release
 ```
 
 5. Run the built executable (for example `PacmanGame.exe`) from `build/` or the Visual Studio output directory.
-
-## Continuous Integration (notes)
-
-- The example workflow above is a ready-to-use Ubuntu-based GitHub Actions job. For multi-platform CI, add jobs using `runs-on: windows-latest` and `runs-on: macos-latest` and adapt dependency installation accordingly (msvc binaries or vcpkg on Windows, Homebrew on macOS).
-- Keep `BUILD_TYPE` as an environment variable in CI so you can switch between `Release` and `Debug` easily.
 
 ## Project layout (important files)
 
