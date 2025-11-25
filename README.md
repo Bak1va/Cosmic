@@ -77,7 +77,7 @@ cmake --build build --config Release
 4. Run tests (optional):
 
 ```powershell
-cd build
+cd build/tests
 ctest -C Release
 ```
 
