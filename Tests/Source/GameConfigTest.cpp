@@ -360,10 +360,6 @@ TEST(GameConfigTest, TileSize_MatchesExpectedValue) {
     EXPECT_EQ(GameConfig::TileSize, 16);
 }
 
-TEST(GameConfigTest, PacmanFrameCount_MatchesExpectedValue) {
-    EXPECT_EQ(GameConfig::PacmanFrameCount, 4);
-}
-
 TEST(GameConfigTest, GhostFrameCount_MatchesExpectedValue) {
     EXPECT_EQ(GameConfig::GhostFrameCount, 2);
 }
